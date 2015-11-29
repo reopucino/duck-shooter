@@ -47,7 +47,9 @@ DuckShot.Game.prototype = {
 		//this.add.tween(this.bg).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 		
 		//game.add.tileSprite(0,0, 800, 63, 'curtain-top');
-		//this.add.image(0,60, 'curtain');
+		this.add.image(0,100, 'curtain');
+		this.flipcurtain = this.add.image(800,100, 'curtain');
+		this.flipcurtain.scale.x = -1;
 	},
 	
 	update:function(){
