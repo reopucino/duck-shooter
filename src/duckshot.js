@@ -30,6 +30,7 @@ DuckShot.Game.prototype = {
 		this.load.image('duck-back', './assets/duck-back.png');
 		this.load.image('target', './assets/target.png');
 		this.load.image('target', './assets/target-back.png');
+		this.load.image('stick-wood', './assets/stick_wood_outline.png');
 	},
 	
 	create:function(){
@@ -56,9 +57,17 @@ DuckShot.Game.prototype = {
 		//this.add.tween(this.bg).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 		
 		//game.add.tileSprite(0,0, 800, 63, 'curtain-top');
-		this.add.image(0,100, 'curtain');
-		this.flipcurtain = this.add.image(800,100, 'curtain');
-		this.flipcurtain.scale.x = -1;
+		//this.add.image(0,100, 'curtain');
+		//this.flipcurtain = this.add.image(800,100, 'curtain');
+		//this.flipcurtain.scale.x = -1;
+		
+		//duck creator
+		//this.ducks = this.add.group();
+		
+		var oneDuck = game.add.image(10,10, 'duck-yellow');//this.ducks.create(10,10, 'duck-yellow');
+		oneDuck.anchor.x = .3;
+		oneDuck.anchor.y = .9;
+		oneDuck.addChild(game.make.image(0,0, 'stick-wood'));
 	},
 	
 	update:function(){
