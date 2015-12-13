@@ -21,6 +21,15 @@ DuckShot.Game.prototype = {
 		this.load.image('tree2', './assets/tree2.png');
 		this.load.image('curtain-top', './assets/curtain_top.png');
 		this.load.image('curtain', './assets/curtain.png');
+		this.load.image('duck-yellow-taget', './assets/duck-yellow-target.png');
+		this.load.image('duck-yellow', './assets/duck-yellow.png');
+		this.load.image('duck-white-taget', './assets/duck-white-target.png');
+		this.load.image('duck-white', './assets/duck-white.png');
+		this.load.image('duck-brown', './assets/duck-brown.png');
+		this.load.image('duck-brown-target', './assets/duck-brown-target.png');
+		this.load.image('duck-back', './assets/duck-back.png');
+		this.load.image('target', './assets/target.png');
+		this.load.image('target', './assets/target-back.png');
 	},
 	
 	create:function(){
