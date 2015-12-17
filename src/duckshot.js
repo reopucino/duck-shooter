@@ -41,7 +41,11 @@ DuckShot.Game.prototype = {
 		this.tree1.anchor.y = .9;
 		this.tree1.rotation = -.2;
 		
-		game.add.tileSprite(0, 300, 800, 220, 'grass');
+		this.group = game.add.group();
+		
+		var grass = game.add.tileSprite(0, 300, 800, 220, 'grass');
+		
+		this.group.add(grass);
 		
 		this.tree2 = game.add.image(700, 430, 'tree2');
 		this.tree2.anchor.x = .5;
@@ -52,6 +56,9 @@ DuckShot.Game.prototype = {
 		this.water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
 		this.add.tween(this.water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 		this.add.tween(this.water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
+		
+		this.group.add(this.water1);
+		this.group.add(this.water2);
 		//this.add.tween(this.tree2).to({rotation:-.2}, 500, "Linear", true, 0, -1, true);
 		//this.text.text ="aaa";
 		//this.add.tween(this.bg).to({x:-100}, 1000, "Linear", true, 0, -1, true);
@@ -64,10 +71,22 @@ DuckShot.Game.prototype = {
 		//duck creator
 		//this.ducks = this.add.group();
 		
-		var oneDuck = game.add.image(10,10, 'duck-yellow');//this.ducks.create(10,10, 'duck-yellow');
-		oneDuck.anchor.x = .3;
-		oneDuck.anchor.y = .9;
-		oneDuck.addChild(game.make.image(0,0, 'stick-wood'));
+		var oneDuck = game.add.image(250,400, 'stick-wood');//this.ducks.create(10,10, 'duck-yellow');
+		oneDuck.anchor.x = .5;
+		oneDuck.anchor.y = -.8;
+		oneDuck.addChild(game.make.image(-55,0, 'duck-yellow'));
+		console.log(oneDuck.z);
+		console.log(this.water1.z+" water");
+		//this.water2.z = 3;
+		
+		console.log(this.tree1.z);
+		console.log(oneDuck.z +" duck");
+		
+		this.group.add(oneDuck);
+		//oneDuck.z = 3;
+		console.log(oneDuck.z +" duck");
+		this.group.sort('z', Phaser.Group.SORT_ASCENDING);
+		//game.sort('z', Phaser.Group.SORT_ASCENDING);
 	},
 	
 	update:function(){
