@@ -2,14 +2,16 @@ var DuckShot={};
 
 DuckShot.Game = function(game){
 	//this.text = null;
+	this.arrayDuck = [];
+	this.duckduck = [];
 };
 
 DuckShot.Game.prototype = {
 	init:function(){
-		this.text = this.add.text(100,100, "Phaser is work", {font:"32px Arial", fill:"#FFFFFF", align:"center"});
+		//this.text = this.add.text(100,100, "Phaser is work", {font:"32px Arial", fill:"#FFFFFF", align:"center"});
 		//this.text.anchor.x = .5;
 		this.scale.pageAlignHorizontally = true;
-		this.scale.pageAlignVertically = true;
+		//this.scale.pageAlignVertically = true;
 	},
 	
 	preload:function(){
@@ -36,12 +38,14 @@ DuckShot.Game.prototype = {
 	create:function(){
 		//this.add.sprite(0,0,'background');
 		this.bg = game.add.tileSprite(0,0, 800, 600, 'background');
+		
+		this.group = game.add.group();
+		
 		this.tree1 = game.add.image(120,320, 'tree1');
 		this.tree1.anchor.x = .5;
 		this.tree1.anchor.y = .9;
 		this.tree1.rotation = -.2;
-		
-		this.group = game.add.group();
+		this.group.add(this.tree1);
 		
 		var grass = game.add.tileSprite(0, 300, 800, 220, 'grass');
 		
@@ -52,6 +56,8 @@ DuckShot.Game.prototype = {
 		this.tree2.anchor.y = .9;
 		this.tree2.rotation = .2;
 		
+		this.group.add(this.tree2);
+		
 		this.water1 = game.add.tileSprite(0, 400, 1000,  224, 'water2');
 		this.water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
 		this.add.tween(this.water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
@@ -59,6 +65,7 @@ DuckShot.Game.prototype = {
 		
 		this.group.add(this.water1);
 		this.group.add(this.water2);
+		
 		//this.add.tween(this.tree2).to({rotation:-.2}, 500, "Linear", true, 0, -1, true);
 		//this.text.text ="aaa";
 		//this.add.tween(this.bg).to({x:-100}, 1000, "Linear", true, 0, -1, true);
@@ -71,25 +78,68 @@ DuckShot.Game.prototype = {
 		//duck creator
 		//this.ducks = this.add.group();
 		
-		var oneDuck = game.add.image(250,400, 'stick-wood');//this.ducks.create(10,10, 'duck-yellow');
+		var oneDuck = game.add.image(250,300, 'stick-wood');//this.ducks.create(10,10, 'duck-yellow');
 		oneDuck.anchor.x = .5;
 		oneDuck.anchor.y = -.8;
 		oneDuck.addChild(game.make.image(-55,0, 'duck-yellow'));
-		console.log(oneDuck.z);
 		console.log(this.water1.z+" water");
-		//this.water2.z = 3;
-		
 		console.log(this.tree1.z);
 		console.log(oneDuck.z +" duck");
 		
 		this.group.add(oneDuck);
-		//oneDuck.z = 3;
-		console.log(oneDuck.z +" duck");
+		oneDuck.z = 4;
+		
+		this.duckCreator(0);
+		this.arrayDuck.push(oneDuck);
+		
+		this.duckduck.push(new TheDuck(game));
+		//this.group.sort('z', Phaser.Group.SORT_ASCENDING);
+	},
+	
+	duckCreator:function(layerPos){
+		var oneDuck = this.add.image(0,0, 'stick-wood');
+		oneDuck.anchor.x = .5;
+		oneDuck.anchor.y = -.8;
+		oneDuck.addChild(game.make.image(-55,0, 'duck-yellow'));
+		this.group.add(oneDuck);
+		if(layerPos<1){
+			oneDuck.z = 5;
+			oneDuck.x = 200;
+			oneDuck.y = 400;
+		}
+		else
+		{
+			oneDuck.z = 4;
+			oneDuck.x = 200;
+			oneDuck.y = 300;
+		}
+		this.arrayDuck.push(oneDuck);
 		this.group.sort('z', Phaser.Group.SORT_ASCENDING);
-		//game.sort('z', Phaser.Group.SORT_ASCENDING);
 	},
 	
 	update:function(){
 		//this.tree2.rotation +=0.1;
+		for(var i =0; i<this.arrayDuck.length; i++){
+			var duck = this.arrayDuck[i];
+			duck.x += 1;
+		}
+		this.duckduck[0].update();
 	}
+};
+
+TheDuck = function(game){
+	var oneDuck = game.add.image(0,0, 'stick-wood');
+	this.x = 10;
+	var y = 10;
+	console.log("call z");
+};
+
+TheDuck.prototype.update = function(){
+	this.x +=1;
+	//this.oneDuck.x+=1;
+	console.log("a");
+}
+
+TheDuck.prototype.damage = function(){
+	
 };
