@@ -36,6 +36,7 @@ DuckShot.Game.prototype = {
 	},
 	
 	create:function(){
+		/*
 		//this.add.sprite(0,0,'background');
 		this.bg = game.add.tileSprite(0,0, 800, 600, 'background');
 		
@@ -94,9 +95,30 @@ DuckShot.Game.prototype = {
 		
 		this.duckduck.push(new TheDuck(game));
 		//this.group.sort('z', Phaser.Group.SORT_ASCENDING);
+		*/
+
+		//adding BG
+		game.add.tileSprite(0,0,800,600, 'background');
+
+		//adding tree
+		var tree = game.add.image(120, 320, 'tree1');
+		tree.anchor.x = .5;
+		tree.anchor.y = .9;
+		tree.rotation = -.2;
+
+		//adding grass
+		game.add.tileSprite(0, 300, 800, 220, 'grass');
+
+		//adding duck first
+		this.duckCreator();
+
+		//adding water foreGround
+		var water1 = game.add.tileSprite(0, 400, 1000,  224, 'water2');
+		this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 	},
 	
-	duckCreator:function(layerPos){
+	duckCreator:function(){
+		/*
 		var oneDuck = this.add.image(0,0, 'stick-wood');
 		oneDuck.anchor.x = .5;
 		oneDuck.anchor.y = -.8;
@@ -114,32 +136,47 @@ DuckShot.Game.prototype = {
 			oneDuck.y = 300;
 		}
 		this.arrayDuck.push(oneDuck);
-		this.group.sort('z', Phaser.Group.SORT_ASCENDING);
+		//this.group.sort('z', Phaser.Group.SORT_ASCENDING);
+		//console.log(this.group);
+		*/
+		var stik = this.add.image(100,200, 'stick-wood');
+		stik.anchor.x = .5;
+		stik.anchor.y =-.8;
+		stik.addChild(game.add.image(-55, 0, 'duck-yellow'));
 	},
 	
 	update:function(){
 		//this.tree2.rotation +=0.1;
+		/*
 		for(var i =0; i<this.arrayDuck.length; i++){
 			var duck = this.arrayDuck[i];
 			duck.x += 1;
 		}
 		this.duckduck[0].update();
+		*/
 	}
 };
 
+
+/*
 TheDuck = function(game){
-	var oneDuck = game.add.image(0,0, 'stick-wood');
-	this.x = 10;
-	var y = 10;
-	console.log("call z");
+	var oneDuck = game.add.image(50,50, 'stick-wood');
+	//this.x = 10;
+	//var y = 10;
+	//console.log("call z");
+	//oneDuck = game.group.add();
+	//game.group.add(oneDuck);
+	//this.group.add(oneDuck);
+	//console.log(game.group)
+
 };
 
 TheDuck.prototype.update = function(){
-	this.x +=1;
+	//this.x +=1;
 	//this.oneDuck.x+=1;
-	console.log("a");
+	//console.log("a");
 }
 
 TheDuck.prototype.damage = function(){
 	
-};
+};*/
