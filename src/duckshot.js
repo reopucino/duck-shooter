@@ -110,14 +110,25 @@ DuckShot.Game.prototype = {
 		game.add.tileSprite(0, 300, 800, 220, 'grass');
 
 		//adding duck first
-		this.duckCreator();
+		var startX = 120;
+		for(var x= 0; x<8;x++){
+			this.duckCreator(x*startX, 310, false);
+		}
 
 		//adding water foreGround
 		var water1 = game.add.tileSprite(0, 400, 1000,  224, 'water2');
 		this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
+		
+		//add duck two
+		for(var x= 0; x<8;x++){
+			this.duckCreator(x*startX, 400, true);
+		}
+		var water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
+		this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
+		
 	},
 	
-	duckCreator:function(){
+	duckCreator:function(x, y, itsFlip){
 		/*
 		var oneDuck = this.add.image(0,0, 'stick-wood');
 		oneDuck.anchor.x = .5;
@@ -139,10 +150,15 @@ DuckShot.Game.prototype = {
 		//this.group.sort('z', Phaser.Group.SORT_ASCENDING);
 		//console.log(this.group);
 		*/
-		var stik = this.add.image(100,200, 'stick-wood');
+		var stik = this.add.image(x,y, 'stick-wood');
 		stik.anchor.x = .5;
 		stik.anchor.y =-.8;
-		stik.addChild(game.add.image(-55, 0, 'duck-yellow'));
+		var child = stik.addChild(game.add.image(-55, 0, 'duck-yellow'));
+		console.log(itsFlip);
+		if(itsFlip){
+			child.scale.x = -1;
+			child.x -=10;
+		}
 	},
 	
 	update:function(){
