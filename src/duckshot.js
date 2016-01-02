@@ -112,19 +112,21 @@ DuckShot.Game.prototype = {
 		//adding duck first
 		var startX = 120;
 		for(var x= 0; x<8;x++){
-			this.duckCreator(x*startX, 310, false);
+			//this.duckCreator(x*startX, 310, false);.
+			this.duckduck.push(new TheDuck(game, x*startX, 310, false));
 		}
-
 		//adding water foreGround
 		var water1 = game.add.tileSprite(0, 400, 1000,  224, 'water2');
-		this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
+		//this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 		
 		//add duck two
 		for(var x= 0; x<8;x++){
-			this.duckCreator(x*startX, 400, true);
+			//this.duckCreator(x*startX, 400, true);
+			//this.
+			this.duckduck.push(new TheDuck(game, x*startX, 400, true));
 		}
 		var water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
-		this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
+		//this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
 		
 	},
 	
@@ -170,29 +172,52 @@ DuckShot.Game.prototype = {
 		}
 		this.duckduck[0].update();
 		*/
+		for(var i=0; i<this.duckduck.length; i++){
+			this.duckduck[i].update();
+		}
 	}
 };
 
 
-/*
-TheDuck = function(game){
-	var oneDuck = game.add.image(50,50, 'stick-wood');
-	//this.x = 10;
-	//var y = 10;
-	//console.log("call z");
-	//oneDuck = game.group.add();
-	//game.group.add(oneDuck);
-	//this.group.add(oneDuck);
-	//console.log(game.group)
 
+TheDuck = function(game, x, y, itsFlip){
+	this.stik = game.add.image(x,y, 'stick-wood');
+	this.stik.anchor.x = .5;
+	this.stik.anchor.y =-.8;
+	this.flip = false;
+	this.child = this.stik.addChild(game.add.image(0, 0, 'duck-yellow'));
+	this.child.anchor.x = .5;
+	if(itsFlip){
+		this.flip = itsFlip;
+		this.child.scale.x = -1;
+		this.child.x -=0;
+	}
+	
 };
 
 TheDuck.prototype.update = function(){
 	//this.x +=1;
 	//this.oneDuck.x+=1;
 	//console.log("a");
+	if(this.flip)
+	{
+		this.stik.x -=1;
+	}
+	else{
+		this.stik.x +=1;
+	}
+	
+	if(this.stik.x <=0){
+		this.stik.x = 820;
+		
+	}
+	else if(this.stik.x > 820){
+		this.stik.x = 0;
+		//this.child.frameName('duck-brown-target');
+	}
+	
 }
 
 TheDuck.prototype.damage = function(){
 	
-};*/
+};
