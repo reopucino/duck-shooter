@@ -51,10 +51,10 @@ DuckShot.Game.prototype = {
 		//adding duck first
 		var startX = 120;
 		for(var x= 0; x<8;x++){
-			//this.duckCreator(x*startX, 310, false);.
-			//this.duckduck.push(new TheDuck(game, x*startX, 310, false));
+			this.duckduck.push(new TheDuck(game, x*startX, 310, false));
 		}
-		this.duckduck.push(new TheDuck(game, startX, 310, false));
+		//this.duckduck.push(new TheDuck(game, startX, 310, false)); testing one duck
+		
 		//adding water foreGround
 		var water1 = game.add.tileSprite(0, 400, 1000,  224, 'water2');
 		//this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
@@ -98,7 +98,8 @@ DuckShot.Game.prototype = {
 	},
 	
 	render:function(){
-		
+		//var d = this.duckduck[0];
+		//d.renderInfo(10);
 	}
 };
 
@@ -139,13 +140,15 @@ TheDuck.prototype.update = function(){
 		this.stik.x = 0;
 		//this.child.frameName('duck-brown-target');
 	}*/
+	this.damage();
 	
 }
 
 TheDuck.prototype.renderInfo = function(posX){
 	game.debug.spriteInfo(this.stik, posX, 32);
+	game.debug.inputInfo(240, 100);
 }
 
 TheDuck.prototype.damage = function(){
-	
+	console.log("aa");
 };
