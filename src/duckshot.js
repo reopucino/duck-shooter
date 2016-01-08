@@ -33,6 +33,8 @@ DuckShot.Game.prototype = {
 		this.load.image('target', './assets/target.png');
 		this.load.image('target', './assets/target-back.png');
 		this.load.image('stick-wood', './assets/stick_wood_outline.png');
+		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,109, 9);
+		game.time.advancedTiming=true;
 	},
 	
 	create:function(){
@@ -98,8 +100,18 @@ DuckShot.Game.prototype = {
 				//var x = i-1;
 				//if(x < 0){ x = this.duckduck.length-1;}
 				//this.duckduck[i].sendBackward(x*120, this.duckduck[i].stik.y);
+				var rand = Math.floor(Math.random()*2);
+				if(rand<1)
+				{
+					this.duckduck[i].child.animations.play('yellow-t');
+				}
+				else{
+					this.duckduck[i].child.animations.play('yellow');
+				}
 				this.duckduck[i].stik.x = -100;
 				this.duckduck[i].stop=false;
+				
+				
 			}
 		}
 	},
@@ -107,6 +119,7 @@ DuckShot.Game.prototype = {
 	render:function(){
 		//var d = this.duckduck[0];
 		//d.renderInfo(10);
+		game.debug.text(game.time.fps|| '--', 2, 14, "#00ff00");   
 	}
 };
 
@@ -117,8 +130,11 @@ TheDuck = function(game, x, y, itsFlip){
 	this.stik.anchor.x = .5;
 	this.stik.anchor.y =-.8;
 	this.flip = false;
-	this.child = this.stik.addChild(game.add.image(0, 0, 'duck-yellow'));
+	this.child = this.stik.addChild(game.add.sprite(0,0, 'ss-duck'));//(game.add.image(0, 0, 'duck-yellow'));
 	this.child.anchor.x = .5;
+	this.child.animations.add('yellow', [2], 1, true);
+	this.child.animations.add('yellow-t', [7], 1, true);
+	this.child.animations.play('yellow');
 	this.stop = false;
 	if(itsFlip){
 		this.flip = itsFlip;
@@ -150,7 +166,7 @@ TheDuck.prototype.update = function(){
 		this.stik.x = 0;
 		//this.child.frameName('duck-brown-target');
 	}*/
-	this.damage();
+	
 	
 }
 
@@ -160,7 +176,7 @@ TheDuck.prototype.renderInfo = function(posX){
 }
 
 TheDuck.prototype.damage = function(){
-	console.log("aa");
+	//console.log("aa");
 }
 
 TheDuck.prototype.sendBackward = function(posX, posY){
@@ -173,4 +189,6 @@ TheDuck.prototype.sendBackward = function(posX, posY){
 		}
 		this.stop=false;
 	}
+	
+	
 };
