@@ -94,6 +94,13 @@ DuckShot.Game.prototype = {
 		*/
 		for(var i=0; i<this.duckduck.length; i++){
 			this.duckduck[i].update();
+			if(this.duckduck[i].stop){
+				//var x = i-1;
+				//if(x < 0){ x = this.duckduck.length-1;}
+				//this.duckduck[i].sendBackward(x*120, this.duckduck[i].stik.y);
+				this.duckduck[i].stik.x = -100;
+				this.duckduck[i].stop=false;
+			}
 		}
 	},
 	
@@ -112,6 +119,7 @@ TheDuck = function(game, x, y, itsFlip){
 	this.flip = false;
 	this.child = this.stik.addChild(game.add.image(0, 0, 'duck-yellow'));
 	this.child.anchor.x = .5;
+	this.stop = false;
 	if(itsFlip){
 		this.flip = itsFlip;
 		this.child.scale.x = -1;
@@ -125,10 +133,12 @@ TheDuck.prototype.update = function(){
 	//console.log("a");
 	if(this.flip)
 	{
-		if(this.stik.x>-55)this.stik.x -=1;
+		if(this.stik.x>-55){this.stik.x -=1;}
+		else if (!this.stop){this.stop = true;}
 	}
 	else{
-		if(this.stik.x<860)this.stik.x +=1;
+		if(this.stik.x<860){this.stik.x +=1;}
+		else if (!this.stop){this.stop = true;}
 	}
 	
 	/*
@@ -151,4 +161,16 @@ TheDuck.prototype.renderInfo = function(posX){
 
 TheDuck.prototype.damage = function(){
 	console.log("aa");
+}
+
+TheDuck.prototype.sendBackward = function(posX, posY){
+	if(this.stik.y == posY){
+		if(this.flip){
+			this.stik.x = posX+120;
+		}
+		else{
+			this.stik.x = posX-120;
+		}
+		this.stop=false;
+	}
 };
