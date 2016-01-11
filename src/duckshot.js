@@ -33,7 +33,7 @@ DuckShot.Game.prototype = {
 		this.load.image('target', './assets/target.png');
 		this.load.image('target', './assets/target-back.png');
 		this.load.image('stick-wood', './assets/stick_wood_outline.png');
-		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,109, 9);
+		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,110, 9);
 		game.time.advancedTiming=true;
 	},
 	
@@ -100,13 +100,33 @@ DuckShot.Game.prototype = {
 				//var x = i-1;
 				//if(x < 0){ x = this.duckduck.length-1;}
 				//this.duckduck[i].sendBackward(x*120, this.duckduck[i].stik.y);
-				var rand = Math.floor(Math.random()*2);
-				if(rand<1)
+				var rand = Math.floor(Math.random()*8);
+				if(rand == 1)
 				{
-					this.duckduck[i].child.animations.play('yellow-t');
+					this.duckduck[i].child.animations.play('back');
+				}
+				else if(rand == 2)
+				{
+					this.duckduck[i].child.animations.play('brown');
+				}
+				else if(rand == 3)
+				{
+					this.duckduck[i].child.animations.play('yellow');
+				}
+				else if(rand == 4)
+				{
+					this.duckduck[i].child.animations.play('brown-t');
+				}
+				else if(rand == 5)
+				{
+					this.duckduck[i].child.animations.play('white-t');
+				}
+				else if(rand == 6)
+				{
+					this.duckduck[i].child.animations.play('white');
 				}
 				else{
-					this.duckduck[i].child.animations.play('yellow');
+					this.duckduck[i].child.animations.play('yellow-t');
 				}
 				this.duckduck[i].stik.x = -100;
 				this.duckduck[i].stop=false;
@@ -132,9 +152,41 @@ TheDuck = function(game, x, y, itsFlip){
 	this.flip = false;
 	this.child = this.stik.addChild(game.add.sprite(0,0, 'ss-duck'));//(game.add.image(0, 0, 'duck-yellow'));
 	this.child.anchor.x = .5;
+	this.child.animations.add('back', [0], 1, true);
+	this.child.animations.add('brown', [1], 1, true);
 	this.child.animations.add('yellow', [2], 1, true);
+	this.child.animations.add('brown-t', [3], 1, true);
+	this.child.animations.add('white-t', [4], 1, true);
+	this.child.animations.add('white', [6], 1, true);
 	this.child.animations.add('yellow-t', [7], 1, true);
-	this.child.animations.play('yellow');
+	var rand = Math.floor(Math.random()*8);
+	if(rand == 1)
+	{
+		this.child.animations.play('back');
+	}
+	else if(rand == 2)
+	{
+		this.child.animations.play('brown');
+	}
+	else if(rand == 3)
+	{
+		this.child.animations.play('yellow');
+	}
+	else if(rand == 4)
+	{
+		this.child.animations.play('brown-t');
+	}
+	else if(rand == 5)
+	{
+		this.child.animations.play('white-t');
+	}
+	else if(rand == 6)
+	{
+		this.child.animations.play('white');
+	}
+	else{
+		this.child.animations.play('yellow-t');
+	}
 	this.stop = false;
 	if(itsFlip){
 		this.flip = itsFlip;
