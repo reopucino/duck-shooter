@@ -4,6 +4,7 @@ DuckShot.Game = function(game){
 	//this.text = null;
 	this.arrayDuck = [];
 	this.duckduck = [];
+	this.xhair = null;
 };
 
 DuckShot.Game.prototype = {
@@ -23,6 +24,7 @@ DuckShot.Game.prototype = {
 		this.load.image('tree2', './assets/tree2.png');
 		this.load.image('curtain-top', './assets/curtain_top.png');
 		this.load.image('curtain', './assets/curtain.png');
+		/*
 		this.load.image('duck-yellow-taget', './assets/duck-yellow-target.png');
 		this.load.image('duck-yellow', './assets/duck-yellow.png');
 		this.load.image('duck-white-taget', './assets/duck-white-target.png');
@@ -30,9 +32,11 @@ DuckShot.Game.prototype = {
 		this.load.image('duck-brown', './assets/duck-brown.png');
 		this.load.image('duck-brown-target', './assets/duck-brown-target.png');
 		this.load.image('duck-back', './assets/duck-back.png');
+		*/
 		this.load.image('target', './assets/target.png');
-		this.load.image('target', './assets/target-back.png');
+		this.load.image('target-back', './assets/target-back.png');
 		this.load.image('stick-wood', './assets/stick_wood_outline.png');
+		this.load.image('croshair', './assets/crosshair.png');
 		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,110, 9);
 		game.time.advancedTiming=true;
 	},
@@ -71,18 +75,7 @@ DuckShot.Game.prototype = {
 		var water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
 		//this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
 		
-	},
-	
-	duckCreator:function(x, y, itsFlip){
-		var stik = this.add.image(x,y, 'stick-wood');
-		stik.anchor.x = .5;
-		stik.anchor.y =-.8;
-		var child = stik.addChild(game.add.image(-55, 0, 'duck-yellow'));
-		console.log(itsFlip);
-		if(itsFlip){
-			child.scale.x = -1;
-			child.x -=10;
-		}
+		this.xhair = new Croshair(game,0,0);
 	},
 	
 	update:function(){
@@ -94,6 +87,7 @@ DuckShot.Game.prototype = {
 		}
 		this.duckduck[0].update();
 		*/
+		this.xhair.update();
 		for(var i=0; i<this.duckduck.length; i++){
 			this.duckduck[i].update();
 			if(this.duckduck[i].stop){
@@ -128,9 +122,16 @@ DuckShot.Game.prototype = {
 				else{
 					this.duckduck[i].child.animations.play('yellow-t');
 				}
-				this.duckduck[i].stik.x = -100;
-				this.duckduck[i].stop=false;
 				
+				//flip or not
+				if(this.duckduck[i].flip){
+					this.duckduck[i].stik.x = 800;
+					this.duckduck[i].stop = false;
+				}
+				else{
+					this.duckduck[i].stik.x = -100;
+					this.duckduck[i].stop=false;
+				}
 				
 			}
 		}
@@ -143,7 +144,18 @@ DuckShot.Game.prototype = {
 	}
 };
 
+Croshair = function(game, x, y){
+	this.crossHair = game.add.image(x,y, 'croshair');
+	this.crossHair.anchor.x = .5;
+	this.crossHair.anchor.y = .5;
+	
+};
 
+Croshair.prototype.update = function(){
+	this.crossHair.x = game.input.mousePointer.x;
+	this.crossHair.y = game.input.mousePointer.y;
+	//console.log(game.input.mousePointer.x);
+};
 
 TheDuck = function(game, x, y, itsFlip){
 	this.stik = game.add.image(x,y, 'stick-wood');
@@ -220,16 +232,16 @@ TheDuck.prototype.update = function(){
 	}*/
 	
 	
-}
+};
 
 TheDuck.prototype.renderInfo = function(posX){
 	game.debug.spriteInfo(this.stik, posX, 32);
 	game.debug.inputInfo(240, 100);
-}
+};
 
 TheDuck.prototype.damage = function(){
 	//console.log("aa");
-}
+};
 
 TheDuck.prototype.sendBackward = function(posX, posY){
 	if(this.stik.y == posY){
