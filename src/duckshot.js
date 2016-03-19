@@ -99,7 +99,7 @@ DuckShot.Game.prototype = {
 				//var x = i-1;
 				//if(x < 0){ x = this.duckduck.length-1;}
 				//this.duckduck[i].sendBackward(x*120, this.duckduck[i].stik.y);
-				var rand = Math.floor(Math.random()*8);
+				var rand = Math.floor(Math.random()*7);
 				if(this.duckduck[i].child.y <= -100){
 					//this.stik.addChild(game.add.sprite(0,0, 'ss-duck'));
 					//this.duckduck[i].child = this.duckduck[i].stik.addChild(game.add.sprite(0,0, 'ss-duck'));
@@ -108,7 +108,8 @@ DuckShot.Game.prototype = {
 				}
 				if(rand == 1)
 				{
-					this.duckduck[i].child.animations.play('back');
+					//this.duckduck[i].child.animations.play('back');
+					this.duckduck[i].child.animations.play('yellow-t');
 				}
 				else if(rand == 2)
 				{
@@ -126,14 +127,16 @@ DuckShot.Game.prototype = {
 				{
 					this.duckduck[i].child.animations.play('white-t');
 				}
-				else if(rand == 6)
+				else //if(rand == 6)
 				{
 					this.duckduck[i].child.animations.play('white');
 				}
-				else{
-					this.duckduck[i].child.animations.play('yellow-t');
-				}
+				//else{this.duckduck[i].child.animations.play('back');}
 				
+				if(this.duckduck[i].killDuck){
+					this.duckduck[i].child.scale.x *=-1;
+					this.duckduck[i].killDuck = false;
+				}
 				//flip or not
 				if(this.duckduck[i].flip){
 					this.duckduck[i].stik.x = 880;
@@ -175,6 +178,7 @@ Croshair.prototype.update = function(){
 };
 
 TheDuck = function(game, x, y, itsFlip){
+	this.killDuck = false;
 	this.stik = game.add.sprite(x,y, 'stick-wood');
 	this.stik.anchor.x = .5;
 	this.stik.anchor.y =-.8;
@@ -188,11 +192,12 @@ TheDuck = function(game, x, y, itsFlip){
 	this.child.animations.add('white-t', [4], 1, true);
 	this.child.animations.add('white', [6], 1, true);
 	this.child.animations.add('yellow-t', [7], 1, true);
-	this.tween = game.add.tween(this.child.scale).to({x:0}, 100, Phaser.Easing.Linear.None);
-	var rand = Math.floor(Math.random()*8);
+	
+	var rand = Math.floor(Math.random()*7);
 	if(rand == 1)
 	{
-		this.child.animations.play('back');
+		//this.child.animations.play('back');
+		this.child.animations.play('yellow-t');
 	}
 	else if(rand == 2)
 	{
@@ -210,13 +215,11 @@ TheDuck = function(game, x, y, itsFlip){
 	{
 		this.child.animations.play('white-t');
 	}
-	else if(rand == 6)
+	else //if(rand == 6)
 	{
 		this.child.animations.play('white');
 	}
-	else{
-		this.child.animations.play('yellow-t');
-	}
+	//else{//this.child.animations.play('yellow-t');	this.child.animations.play('back');}
 	this.stop = false;
 	if(itsFlip){
 		this.flip = itsFlip;
@@ -230,6 +233,10 @@ TheDuck = function(game, x, y, itsFlip){
 	//game.physics.p2.enable([this.duckduck[0]]);
 	//adding duck clik
 	//this.child.
+	
+	this.tween = game.add.tween(this.child.scale).to({x:0}, 100, Phaser.Easing.Linear.None);
+	this.tween.onComplete.add(this.changeBla, this);
+	this.otherTween = game.add.tween(this.child.scale);
 	
 	this.child.inputEnabled = true;
 	//this.child.input.useHandCursor = true;
@@ -263,15 +270,23 @@ TheDuck.prototype.update = function(){
 	
 };
 
+TheDuck.prototype.changeBla = function(){
+	this.child.animations.play('back');
+	var scaleSize  = (this.flip)?1:-1;
+	this.otherTween.to({x:scaleSize}, 100, Phaser.Easing.Linear.None);
+	this.otherTween.start();
+};
+
 TheDuck.prototype.renderInfo = function(posX){
 	game.debug.spriteInfo(this.stik, posX, 32);
 	game.debug.inputInfo(240, 100);
 };
 
 TheDuck.prototype.damage = function(){
-	console.log("aa");
 	//this.stik.removeChild(this.child);
+	if(this.killDuck)return;
 	this.tween.start();
+	this.killDuck = true;
 	//this.child.y = (-game.world._height) -100;
 	//console.log(this.child.animations.name);
 };
