@@ -1,10 +1,14 @@
-var DuckShot={};
+var DuckShot={
+	score : 0,
+	polimer : null,
+};
 
-DuckShot.Game = function(game){
+DuckShot.Game = function(){
 	//this.text = null;
 	this.arrayDuck = [];
 	this.duckduck = [];
 	this.xhair = null;
+	this.bitScore = [];
 };
 
 DuckShot.Game.prototype = {
@@ -38,13 +42,19 @@ DuckShot.Game.prototype = {
 		this.load.image('stick-wood', './assets/stick_wood_outline.png');
 		this.load.image('croshair', './assets/crosshair.png');
 		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,110, 9);
+		
+		this.load.atlasXML('sprites', './assets/spritesheet_hud.png', './assets/spritesheet_hud.xml');
 		game.time.advancedTiming=true;
 	},
 	
 	create:function(){
 		//adding BG
 		game.add.tileSprite(0,0,800,600, 'background');
-
+		
+		game.add.image(20,20, 'sprites', 'icon_duck.png');
+		
+		//this.bitScore.push(game.add.image(60,20, 'sprites', 'text_0_small.png'));
+		DuckShot.polimer = game.add.image(60,20, 'sprites', 'text_0_small.png');
 		//adding tree
 		var tree = game.add.image(120, 320, 'tree1');
 		tree.anchor.x = .5;
@@ -55,9 +65,9 @@ DuckShot.Game.prototype = {
 		game.add.tileSprite(0, 300, 800, 220, 'grass');
 
 		//adding duck first
-		var startX = 120;
+		var startX = 240;
 		
-		for(var x= 0; x<8;x++){
+		for(var x= 0; x<4;x++){
 			this.duckduck.push(new TheDuck(game, x*startX, 310, false));
 		}
 		//this.duckduck.push(new TheDuck(game, startX, 310, false)); testing one duck
@@ -67,12 +77,12 @@ DuckShot.Game.prototype = {
 		//this.add.tween(water1).to({x:-100}, 1000, "Linear", true, 0, -1, true);
 		
 		//add duck two
-		for(var x= 0; x<8;x++){
+		for(var x= 0; x<4;x++){
 			//this.duckCreator(x*startX, 400, true);
 			//this.
-			//this.duckduck.push(new TheDuck(game, x*startX, 400, true));
+			this.duckduck.push(new TheDuck(game, x*startX, 400, true));
 		}
-		this.duckduck.push(new TheDuck(game, 600, 400, true));
+		//this.duckduck.push(new TheDuck(game, 600, 400, true));
 		var water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
 		//this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
 		
@@ -92,9 +102,10 @@ DuckShot.Game.prototype = {
 		this.duckduck[0].update();
 		*/
 		this.xhair.update();
-		
+		//console.log(this.duckduck[0].flip);
 		for(var i=0; i<this.duckduck.length; i++){
 			this.duckduck[i].update();
+			
 			if(this.duckduck[i].stop){
 				//var x = i-1;
 				//if(x < 0){ x = this.duckduck.length-1;}
@@ -178,6 +189,7 @@ Croshair.prototype.update = function(){
 };
 
 TheDuck = function(game, x, y, itsFlip){
+	this.game = game;
 	this.killDuck = false;
 	this.stik = game.add.sprite(x,y, 'stick-wood');
 	this.stik.anchor.x = .5;
@@ -192,6 +204,7 @@ TheDuck = function(game, x, y, itsFlip){
 	this.child.animations.add('white-t', [4], 1, true);
 	this.child.animations.add('white', [6], 1, true);
 	this.child.animations.add('yellow-t', [7], 1, true);
+	this.SPEEDMOVEMENT = 3;
 	
 	var rand = Math.floor(Math.random()*7);
 	if(rand == 1)
@@ -249,11 +262,11 @@ TheDuck.prototype.update = function(){
 	//console.log("a");
 	if(this.flip)
 	{
-		if(this.stik.x>-55){this.stik.x -=1;}
+		if(this.stik.x>-55){this.stik.x -=this.SPEEDMOVEMENT;}
 		else if (!this.stop){this.stop = true;}
 	}
 	else{
-		if(this.stik.x<860){this.stik.x +=1;}
+		if(this.stik.x<860){this.stik.x +=this.SPEEDMOVEMENT;}
 		else if (!this.stop){this.stop = true;}
 	}
 	
@@ -287,6 +300,13 @@ TheDuck.prototype.damage = function(){
 	if(this.killDuck)return;
 	this.tween.start();
 	this.killDuck = true;
+	//DuckShot.Game.score += 1;
+	//console.log(DuckShot.Game.score);
+	DuckShot.score+=1;
+	console.log(DuckShot.score);
+	DuckShot.polimer.loadTexture('sprites', 'text_1_small.png');
+	console.log(DuckShot.Game);
+	console.log(DuckShot.Game.bitScore);
 	//this.child.y = (-game.world._height) -100;
 	//console.log(this.child.animations.name);
 };
