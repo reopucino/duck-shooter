@@ -1,13 +1,21 @@
 var DuckShot={
 	score : 0,
-	polimer : null,
+	IMGscoring : [],
+	IMGIndex:['text_0_small.png', 'text_1_small.png', 'text_2_small.png', 'text_3_small.png',
+			  'text_4_small.png', 'text_5_small.png', 'text_6_small.png', 'text_7_small.png',
+			  'text_8_small.png', 'text_9_small.png'],
+	polimer:null,
+	bulletslot : [],
+	reload:[],
+	bullets:5,
+	lastShot:false,
+	speedMovement:3,
 };
 
 DuckShot.Game = function(){
 	//this.text = null;
 	this.arrayDuck = [];
 	this.duckduck = [];
-	this.xhair = null;
 	this.bitScore = [];
 };
 
@@ -28,6 +36,7 @@ DuckShot.Game.prototype = {
 		this.load.image('tree2', './assets/tree2.png');
 		this.load.image('curtain-top', './assets/curtain_top.png');
 		this.load.image('curtain', './assets/curtain.png');
+		this.load.image('pause', './assets/pause-stroke.png');
 		/*
 		this.load.image('duck-yellow-taget', './assets/duck-yellow-target.png');
 		this.load.image('duck-yellow', './assets/duck-yellow.png');
@@ -44,9 +53,13 @@ DuckShot.Game.prototype = {
 		this.load.spritesheet('ss-duck', './assets/ss_duck.png', 114,110, 9);
 		
 		this.load.atlasXML('sprites', './assets/spritesheet_hud.png', './assets/spritesheet_hud.xml');
+		this.load.atlasXML('reload', './assets/reload.png', './assets/reload.xml');
 		game.time.advancedTiming=true;
 	},
 	
+	adding : function(num){
+		DuckShot.IMGscoring.push(game.add.image(60+num*30,20, 'sprites', 'text_0_small.png'));
+	},
 	create:function(){
 		//adding BG
 		game.add.tileSprite(0,0,800,600, 'background');
@@ -54,7 +67,9 @@ DuckShot.Game.prototype = {
 		game.add.image(20,20, 'sprites', 'icon_duck.png');
 		
 		//this.bitScore.push(game.add.image(60,20, 'sprites', 'text_0_small.png'));
-		DuckShot.polimer = game.add.image(60,20, 'sprites', 'text_0_small.png');
+		//DuckShot.polimer = game.add.image(60,20, 'sprites', 'text_0_small.png');
+		DuckShot.IMGscoring.push(game.add.image(60,20, 'sprites', 'text_0_small.png'));
+		
 		//adding tree
 		var tree = game.add.image(120, 320, 'tree1');
 		tree.anchor.x = .5;
@@ -86,10 +101,38 @@ DuckShot.Game.prototype = {
 		var water2 = game.add.tileSprite(-100, 480, 1000,  224, 'water1');
 		//this.add.tween(water2).to({x:0}, 1000, "Linear", true, 0, -1, true);
 		
-		this.xhair = new Croshair(game,0,0);
+		//this.xhair = new Croshair(game,0,0);
 		
-		//start physic
+		for(var i = 0; i<5; i++){
+			DuckShot.reload.push(game.add.image(630+i*30, 550, 'sprites', 'icon_bullet_gold_short.png'));
+		}
 		
+		var button = game.add.image(30, 540,'reload', 'upper.png');
+		button.inputEnabled = true;
+		button.input.priorityID = 1;
+		button.events.onInputDown.add(this.actionOnClick, this);
+		//adding pause game
+		game.add.image(730, 15, 'pause');
+		//game.input.enabled = true;
+		game.input.onDown.add(this.shooting, true);
+	},
+	
+	actionOnClick:function(){
+		DuckShot.bullets = 5;
+		for(var i = 0; i<5; i++){
+			DuckShot.reload[i].loadTexture('sprites', "icon_bullet_gold_short.png");
+		}
+		
+	},
+	
+	shooting:function(){ 
+		//if(DuckShot.bullets == 0)return;
+		//DuckShot.bullets -= 1;
+		if(DuckShot.bullets > 0){
+			DuckShot.reload[DuckShot.bullets-1].loadTexture('sprites', "icon_bullet_empty_short.png");
+		}
+		DuckShot.bullets -=1;
+		if(DuckShot.bullets <= -1)return;
 	},
 	
 	update:function(){
@@ -101,7 +144,6 @@ DuckShot.Game.prototype = {
 		}
 		this.duckduck[0].update();
 		*/
-		this.xhair.update();
 		//console.log(this.duckduck[0].flip);
 		for(var i=0; i<this.duckduck.length; i++){
 			this.duckduck[i].update();
@@ -111,12 +153,7 @@ DuckShot.Game.prototype = {
 				//if(x < 0){ x = this.duckduck.length-1;}
 				//this.duckduck[i].sendBackward(x*120, this.duckduck[i].stik.y);
 				var rand = Math.floor(Math.random()*7);
-				if(this.duckduck[i].child.y <= -100){
-					//this.stik.addChild(game.add.sprite(0,0, 'ss-duck'));
-					//this.duckduck[i].child = this.duckduck[i].stik.addChild(game.add.sprite(0,0, 'ss-duck'));
-					//this.duckduck[i].child.anchor.x = .5;
-					this.duckduck[i].child.y = 0;
-				}
+				
 				if(rand == 1)
 				{
 					//this.duckduck[i].child.animations.play('back');
@@ -145,17 +182,20 @@ DuckShot.Game.prototype = {
 				//else{this.duckduck[i].child.animations.play('back');}
 				
 				if(this.duckduck[i].killDuck){
-					this.duckduck[i].child.scale.x *=-1;
+					//this.duckduck[i].child.scale.x *=-1;
 					this.duckduck[i].killDuck = false;
 				}
 				//flip or not
 				if(this.duckduck[i].flip){
 					this.duckduck[i].stik.x = 880;
 					this.duckduck[i].stop = false;
+					this.duckduck[i].child.scale.x = -1;
+					
 				}
 				else{
 					this.duckduck[i].stik.x = -100;
 					this.duckduck[i].stop=false;
+					this.duckduck[i].child.scale.x = 1;
 				}
 				
 			}
@@ -205,7 +245,6 @@ TheDuck = function(game, x, y, itsFlip){
 	this.child.animations.add('white', [6], 1, true);
 	this.child.animations.add('yellow-t', [7], 1, true);
 	this.SPEEDMOVEMENT = 3;
-	
 	var rand = Math.floor(Math.random()*7);
 	if(rand == 1)
 	{
@@ -262,11 +301,11 @@ TheDuck.prototype.update = function(){
 	//console.log("a");
 	if(this.flip)
 	{
-		if(this.stik.x>-55){this.stik.x -=this.SPEEDMOVEMENT;}
+		if(this.stik.x>-55){this.stik.x -=DuckShot.speedMovement;}
 		else if (!this.stop){this.stop = true;}
 	}
 	else{
-		if(this.stik.x<860){this.stik.x +=this.SPEEDMOVEMENT;}
+		if(this.stik.x<860){this.stik.x +=DuckShot.speedMovement;}
 		else if (!this.stop){this.stop = true;}
 	}
 	
@@ -295,20 +334,40 @@ TheDuck.prototype.renderInfo = function(posX){
 	game.debug.inputInfo(240, 100);
 };
 
+TheDuck.prototype.checkLast = function(){
+	return (DuckShot.bullets == 0);
+}
+
 TheDuck.prototype.damage = function(){
 	//this.stik.removeChild(this.child);
-	if(this.killDuck)return;
+	if(this.killDuck || DuckShot.bullets <=-1)return;
 	this.tween.start();
 	this.killDuck = true;
 	//DuckShot.Game.score += 1;
 	//console.log(DuckShot.Game.score);
-	DuckShot.score+=1;
-	console.log(DuckShot.score);
-	DuckShot.polimer.loadTexture('sprites', 'text_1_small.png');
-	console.log(DuckShot.Game);
-	console.log(DuckShot.Game.bitScore);
+	if(this.child.animations.frame == 3 || this.child.animations.frame == 4 || this.child.animations.frame == 7){
+		DuckShot.score+=5;
+	}
+	else {
+		DuckShot.score+=1;
+	}
+	//DuckShot.polimer.loadTexture('sprites', DuckShot.IMGIndex[DuckShot.score]);
+	//check length
+	var stringScore = ''+DuckShot.score;
+	
+	if(stringScore.length>DuckShot.IMGscoring.length){
+		//game.add.image(60,20, 'sprites', 'text_0_small.png'));
+		DuckShot.Game.prototype.adding(stringScore.length-1);
+		//DuckShot.speedMovement += 1;
+	}
+	
+	for(var i = 0; i<stringScore.length;i++){
+		DuckShot.IMGscoring[i].loadTexture('sprites', DuckShot.IMGIndex[stringScore[i]]);
+		
+	}
 	//this.child.y = (-game.world._height) -100;
 	//console.log(this.child.animations.name);
+	//console.log(DuckShot.score);
 };
 
 TheDuck.prototype.sendBackward = function(posX, posY){
@@ -321,6 +380,7 @@ TheDuck.prototype.sendBackward = function(posX, posY){
 		}
 		this.stop=false;
 	}
+	console.log("aas");
 	
 	
 };
