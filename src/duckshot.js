@@ -17,6 +17,7 @@ DuckShot.Game = function(){
 	this.arrayDuck = [];
 	this.duckduck = [];
 	this.bitScore = [];
+	//just update for testing push with ssh key
 };
 
 DuckShot.Game.prototype = {
